@@ -1,15 +1,55 @@
 package edu.iis.mto.testreactor.dishwasher;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import org.hamcrest.Matchers;
+import edu.iis.mto.testreactor.dishwasher.engine.Engine;
+import edu.iis.mto.testreactor.dishwasher.engine.EngineException;
+import edu.iis.mto.testreactor.dishwasher.pump.PumpException;
+import edu.iis.mto.testreactor.dishwasher.pump.WaterPump;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 class DishWasherTest {
 
+    @Mock
+    private Engine engine;
+    @Mock
+    private DirtFilter dirtFilter;
+    @Mock
+    private Door door;
+    @Mock
+    private WaterPump waterPump;
+
+    private DishWasher dishWasher;
+    private WashingProgram anyEcoProgram;
+    private FillLevel anyFillLevel;
+
+    private static final double VALUE_GRATER_THAN_MAX_CAPACITY = 60.0;
+
+    @BeforeEach
+    public void setUp() {
+        anyEcoProgram = WashingProgram.ECO;
+        anyFillLevel = FillLevel.HALF;
+        dishWasher = new DishWasher(waterPump, engine, dirtFilter, door);
+    }
+
     @Test
-    void itCompiles() {
-        assertThat(true, Matchers.equalTo(true));
+    public void shouldThrowNPEWhenOneOfArgumentIsNull() {
+        assertThrows(NullPointerException.class, () -> new DishWasher(null, engine, dirtFilter, null));
+    }
+
+    @Test
+    public void shouldThrowNPEWhenProgramIsNull() {
+        DishWasher dishWasher = new DishWasher(waterPump, engine, dirtFilter, door);
+        assertThrows(NullPointerException.class, () -> dishWasher.start(null));
     }
 
 }
