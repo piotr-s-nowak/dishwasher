@@ -75,4 +75,17 @@ class DishWasherTest {
         when(dirtFilter.capacity()).thenReturn(valueLessThanMaxCapacity);
         assertEquals(Status.ERROR_FILTER, dishWasher.start(programConfiguration).getStatus());
     }
+
+    @Test
+    public void shouldCatchPumpExceptionAndSetStatusErrorPump() throws PumpException {
+        ProgramConfiguration programConfiguration = ProgramConfiguration.builder()
+                .withProgram(anyEcoProgram)
+                .withFillLevel(anyFillLevel)
+                .withTabletsUsed(true)
+                .build();
+        when(door.closed()).thenReturn(true);
+        when(dirtFilter.capacity()).thenReturn(VALUE_GRATER_THAN_MAX_CAPACITY);
+        doThrow(new PumpException()).when(waterPump).pour(any(FillLevel.class));
+        assertEquals(Status.ERROR_PUMP, dishWasher.start(programConfiguration).getStatus());
+    }
 }
