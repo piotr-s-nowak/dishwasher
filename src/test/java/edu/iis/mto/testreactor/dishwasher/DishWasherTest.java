@@ -63,5 +63,16 @@ class DishWasherTest {
         assertEquals(Status.DOOR_OPEN, dishWasher.start(programConfiguration).getStatus());
     }
 
-
+    @Test
+    public void shouldSetStatusErrorFilterWhenDirtFilterCapacityIsWrong() {
+        double valueLessThanMaxCapacity = 10.0;
+        ProgramConfiguration programConfiguration = ProgramConfiguration.builder()
+                .withProgram(anyEcoProgram)
+                .withFillLevel(anyFillLevel)
+                .withTabletsUsed(true)
+                .build();
+        when(door.closed()).thenReturn(true);
+        when(dirtFilter.capacity()).thenReturn(valueLessThanMaxCapacity);
+        assertEquals(Status.ERROR_FILTER, dishWasher.start(programConfiguration).getStatus());
+    }
 }
