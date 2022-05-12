@@ -52,4 +52,16 @@ class DishWasherTest {
         assertThrows(NullPointerException.class, () -> dishWasher.start(null));
     }
 
+    @Test
+    public void shouldSetStatusDoorOpenWhenDoorIsUnlocked() {
+        ProgramConfiguration programConfiguration = ProgramConfiguration.builder()
+                .withProgram(anyEcoProgram)
+                .withFillLevel(anyFillLevel)
+                .withTabletsUsed(true)
+                .build();
+        when(door.closed()).thenReturn(false);
+        assertEquals(Status.DOOR_OPEN, dishWasher.start(programConfiguration).getStatus());
+    }
+
+
 }
