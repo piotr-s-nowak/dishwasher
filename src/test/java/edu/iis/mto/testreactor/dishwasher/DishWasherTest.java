@@ -113,5 +113,17 @@ class DishWasherTest {
         when(dirtFilter.capacity()).thenReturn(VALUE_GRATER_THAN_MAX_CAPACITY);
         assertEquals(Status.SUCCESS, dishWasher.start(programConfiguration).getStatus());
     }
+    
+    @Test
+    public void shouldNotInvokeDirtFilterCapacityWhenTabletsAreNotUsed() {
+        ProgramConfiguration programConfiguration = ProgramConfiguration.builder()
+                .withProgram(anyEcoProgram)
+                .withFillLevel(anyFillLevel)
+                .withTabletsUsed(false)
+                .build();
+        when(door.closed()).thenReturn(true);
+        assertEquals(Status.SUCCESS, dishWasher.start(programConfiguration).getStatus());
+        verifyNoInteractions(dirtFilter);
+    }
 
 }
