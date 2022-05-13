@@ -102,4 +102,16 @@ class DishWasherTest {
         assertEquals(Status.ERROR_PROGRAM, dishWasher.start(programConfiguration).getStatus());
     }
 
+    @Test
+    public void shouldSetStatusSuccess() {
+        ProgramConfiguration programConfiguration = ProgramConfiguration.builder()
+                .withProgram(anyEcoProgram)
+                .withFillLevel(anyFillLevel)
+                .withTabletsUsed(true)
+                .build();
+        when(door.closed()).thenReturn(true);
+        when(dirtFilter.capacity()).thenReturn(VALUE_GRATER_THAN_MAX_CAPACITY);
+        assertEquals(Status.SUCCESS, dishWasher.start(programConfiguration).getStatus());
+    }
+
 }
