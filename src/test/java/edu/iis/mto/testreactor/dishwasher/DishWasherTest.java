@@ -126,4 +126,16 @@ class DishWasherTest {
         verifyNoInteractions(dirtFilter);
     }
 
+    @Test
+    public void shouldInvokeDoorUnlockAfterWashing() {
+        ProgramConfiguration programConfiguration = ProgramConfiguration.builder()
+                .withProgram(anyEcoProgram)
+                .withFillLevel(anyFillLevel)
+                .withTabletsUsed(false)
+                .build();
+        when(door.closed()).thenReturn(true);
+        assertEquals(Status.SUCCESS, dishWasher.start(programConfiguration).getStatus());
+        verify(door, times(1)).unlock();
+    }
+    
 }
